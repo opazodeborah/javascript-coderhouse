@@ -1,3 +1,5 @@
+
+	
 	function consola(frase) {
 
         console.log(frase);
@@ -12,9 +14,8 @@ class Artefacto {
 		this.id = i++;
         this.nombre = nombre;
         this.consumo = consumo;
-		this.consumoPorPeriodo = consumo*cantidadDiasPeriodo;
+	}
 
-    }
 }
 
 	let cantidadDiasPeriodo = 0;
@@ -22,8 +23,12 @@ class Artefacto {
 	let totalConsumos = 0;
 	console.log(totalConsumos);
 
-	const arrayArtefactos = [];
+	let arrayArtefactos = JSON.parse(localStorage.getItem('Artefacto'));
 	const artefactosEliminados = [];
+	const almacenados = JSON.parse(localStorage.getItem('Artefacto'));
+	console.log(typeof arrayArtefactos);
+	console.log(typeof almacenados);
+
 /*
 	function altaArtefacto() {
 		let nombre = prompt( `Ingrese el nombre del Artefacto N°${i}: `);
@@ -33,11 +38,11 @@ class Artefacto {
 		arrayArtefactos.push(nuevoArtefacto);
 	}
 */
-	function guardarEnLocalStorage(){
+	function guardarEnlocalStorage(){
 		localStorage.setItem("Artefacto", JSON.stringify(arrayArtefactos));
 	}
 
-	function guardarEnLocalStorageEliminado(){
+	function guardarEnlocalStorageEliminado(){
 		localStorage.setItem("ArtefactosEliminados", JSON.stringify(artefactosEliminados));
 	}
 
@@ -86,8 +91,8 @@ function altaDeArtefacto(){
 		const artefacto = new Artefacto(nombre.value, +consumo.value);
 		arrayArtefactos.push(artefacto);
 		console.log(totalConsumos.value);
-		//  Guardo en el localstorage
-		guardarEnLocalStorage();
+		//  Guardo en el localStorage
+		guardarEnlocalStorage();
 		//Verificamos por consola:
 		console.log(arrayArtefactos);
 	
@@ -102,8 +107,7 @@ function altaDeArtefacto(){
 
 
 	function mostrarInfoArtefactos() {
-
- 
+		const formulario = document.getElementById("formulario");
 		const artefactoTabla = document.getElementById("InfoArtefactos");
 		//creamos la tabla y el tbody
 		const tabla = document.createElement("table");
@@ -115,27 +119,27 @@ function altaDeArtefacto(){
 		  <th scope="col">#id</th>
 		  <th scope="col">Nombre</th>
 		  <th scope="col">Consumo</th>
-		  <th scope="col">Consumo por Periodo</th>
 		</tr>
 	  </thead>
 	  `;
 		artefactoTabla.innerHTML = "";
 		
 		//recorro el array de Artefacto
-
-		for(const artefacto of arrayArtefactos){
+	for(const artefacto of arrayArtefactos){
 			tablaBody.innerHTML += `
 				<tr>
 					<td>${artefacto.id}</td>
 					<td>${artefacto.nombre}</td>
-					<td>${artefacto.consumo}</td>
-					<td>${artefacto.consumoPorPeriodo}</td>					
+					<td>${artefacto.consumo}</td>				
 				</tr>
 			`;
 		}
 		
 		tabla.append(tablaBody);
 		artefactoTabla.append(tabla);
+		formulario.reset();
+		totalkilowatts();
+		calcularTotal();
 		}
 
 	mostrarInfoArtefactos()
@@ -177,9 +181,9 @@ function eliminarArtefacto(){
 		arrayArtefactos.splice(indice, 1);
 		artefactosEliminados.push(artefactoAeliminar);
 	
-		//  Guardo en el localstorage
-		guardarEnLocalStorage();
-		guardarEnLocalStorageEliminado();
+		//  Guardo en el localStorage
+		guardarEnlocalStorage();
+		guardarEnlocalStorageEliminado();
 		//Verificamos por consola:
 		console.log(arrayArtefactos);
 	
@@ -212,10 +216,20 @@ function eliminarArtefacto(){
 		
 			const agregarPeriodo = parseInt(document.getElementById("periodo").value);
 			cantidadDiasPeriodo = agregarPeriodo;
-			console.log(cantidadDiasPeriodo)
+			console.log(cantidadDiasPeriodo);
+			console.log(arrayArtefactos);
+			calcularTotal();
+			totalkilowatts();
+			mostrarInfoArtefactos();
 			
 		})
-		
+	
 		}
 
 	agregarPeriodo()
+
+	function eliminarHistorial(){
+		arrayArtefactos=[];
+		localStorage.clear();
+		mostrarInfoArtefactos();
+		}
