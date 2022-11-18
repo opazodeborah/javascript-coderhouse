@@ -26,7 +26,7 @@ function almacenarHistorial() {
 	if (almacenados != undefined && almacenados.length < 1) {
 		console.log(almacenados);
 	}
-	if (almacenados.length >= 1) {
+	if (almacenados?.length >= 1) {
 		arrayArtefactos = almacenados;
 		console.log(arrayArtefactos);
 		i = (1 + almacenados.length);
